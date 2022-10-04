@@ -3,9 +3,10 @@ import Email from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "../../../lib/prismadb";
 import nodemailer from 'nodemailer';
+import { NextAuthOptions } from "next-auth";
 
 
-export default NextAuth({
+export const authOptions : NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
     providers:[
         Email({
@@ -20,8 +21,13 @@ export default NextAuth({
             return session
         },
     }, 
-})
+}
+
+
 
 function html(arg0: { url: string; site: string; email: string; }): string | Buffer | import("stream").Readable | import("nodemailer/lib/mailer").AttachmentLike | undefined {
     throw new Error("Function not implemented.");
 }
+
+
+export default NextAuth(authOptions);
