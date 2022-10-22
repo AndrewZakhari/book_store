@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import React from "react";
 import Image from "next/image";
 import { useState } from "react";
+import { GetStaticProps } from "next";
 const axios = require('axios');
 
 
@@ -11,10 +12,21 @@ interface form  {
 }
 
 
+export const getStaticProps : GetStaticProps = () => {
+    const url = process.env.CLOUDINARY_UPLOAD_URL
+    return {
+        props: {
+            url
+        }
+    }
+}
 
 
+const Post : NextPage = (props) => {
 
-const Post : NextPage = () => {
+    const {url} : any = props
+
+    
 
     const [error, setError] = useState("")
     const [Todo, setTodo] = useState(true)
@@ -42,7 +54,7 @@ const Post : NextPage = () => {
 
             formData.append("upload_preset", "my_uploads")
 
-            const data = await fetch(process.env.CLOUDINARY_UPLOAD_URL , {
+            const data = await fetch(url , {
                 method: "POST",
                 body: formData
             })
@@ -55,6 +67,7 @@ const Post : NextPage = () => {
                 method: 'POST',
                 headers: {"Content-Type" : "application/json"},
                 data: {
+                    name : e.target.name.value,
                     image : res.secure_url, 
                     price : e.target.price.value,
                     description: e.target.description.value
@@ -69,11 +82,13 @@ const Post : NextPage = () => {
     if(Todo){
     return (
         <>
-        <div className="align-middle grid  place-content-center">
-            <form className="grid gap-3 place-items-center rounded-lg p-3 col-start-1 col-end-2 grid-cols-1 border-2 w-100 shadow-lg items-center text-center" onSubmit={handlePost}>
+        <div className="flex items-center justify-center h-screen">
+            <form className="grid h-fit gap-3 place-items-center rounded-lg p-3 col-start-1 col-end-2 grid-cols-1 border-2 w-100 shadow-lg items-center text-center" onSubmit={handlePost}>
                 {error !== "" && 
                 <p className="text-white bg-red-600 rounded-md p-2 ">{error}</p>
                 }
+                <label>Book Name</label>
+                <input className="border rounded-md border-black    " required type="text" name="name" />
                 <label className="">Upload Book's Image</label>
                 <input required type="file" name="image" />
                 <label>Price:</label>
