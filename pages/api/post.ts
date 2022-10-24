@@ -5,21 +5,39 @@ import prisma from '../../lib/prismadb'
 
 
 export default async function handler(req : NextApiRequest, res: NextApiResponse) {
-
+    let message;
     const session = await unstable_getServerSession(req, res, authOptions)
     if(session){
-    const { email } : any = session.user
+    const { email } : any = session.user 
     
     const findUser = await prisma.user.findFirst({
         where: {
             email: email
         }
     })
-    console.log(findUser)
-}
+    console.log(findUser?.books)
 
+    let arr = findUser?.books
 
-    console.log(req.body)
+     arr?.push(req.body)
+
+    const updatedArr = await JSON.parse(JSON.stringify(arr))
+
+    
+
+    const update = await prisma.user.update({
+        where: {
+            email : email
+        },
+        data : {
+            books : updatedArr
+        }
+    })
    
-    res.json({"res": req.body.data}) 
+    message = "Sucess"
+}else {
+    message = "Failure"
+}
+   
+    res.json({message: message}) 
 }

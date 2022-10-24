@@ -46,7 +46,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   cart          String[]
-  books          String[]
+  books          Json[]
 }
 
 model VerificationToken {
