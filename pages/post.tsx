@@ -74,6 +74,7 @@ const Post : NextPage = (props) => {
                 }
             })
             console.log(api)
+            window.location.reload()
         }
     }
     
