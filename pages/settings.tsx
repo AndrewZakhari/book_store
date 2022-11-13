@@ -51,6 +51,7 @@ const Settings : NextPage =  (props : any) => {
     console.log(serializedUserInfo)
     const [message  , setMessage] : any = useState();
     const [name, setName] = useState(serializedUserInfo.name);
+    const [readStatus, setReadStatus] : any  = useState();
    
 
     const changeName = async (e : any) => {
@@ -80,10 +81,10 @@ const Settings : NextPage =  (props : any) => {
     return (
         <>
         <div className="flex gap-10 scroll-smooth h-screen">
-        <div id="sideMenu" className="top-0 left-0 w-60 bg-black bottom-0 text-white">
+        <div id="sideMenu" className="top-0 left-0 w-60 bottom-0 flex flex-col items-center py-10 bg-black fixed text-white">
             <p>SideMenu</p>
         </div>
-        <div id="profile" className="my-10 w-full">
+        <div id="profile" className="my-10 ml-64 w-full">
            <div>
             {!serializedUserInfo.name  && 
             <>
@@ -91,49 +92,8 @@ const Settings : NextPage =  (props : any) => {
             <div className="border-b-2 py-10">
                 <p>Welcome {serializedUserInfo.email}</p>
             </div> 
-            <h1 className="text-lg text-center my-5">Books You Published on our platform</h1>
-                <div className="flex flex-wrap gap-3">
-                {serializedUserInfo.books.map((value : any , index : number) => {
-                    return (
-                        
-                    <div 
-                     className="h-fit  hover:scale-105 transition
-                      items-center flex flex-col w-64 rounded-md border border-black" key={index}> 
-                        <p>{value.name}</p>
-                        <Image src={value.image} width="240px" height="400px"/>
-                        <p>{value.price}$</p>
-                        <p
-                        className="scroll-smooth"
-                         onMouseEnter={(e : any) => {
-                            e.target.className = "scroll-smooth"
-                            e.target.innerText = value.description
-                            window.scroll({
-                                top: 600,
-                                behavior: "smooth"
-                            })
-                          
-                        }}
-                        onMouseLeave={(e : any) => {
-                            console.log(e.target)
-                            window.scroll({
-                                top: 200,
-                                behavior: "smooth"
-                            })
-                            setTimeout(() => {
-                            e.target.className = "scroll-smooth"
-                            e.target.innerHTML = value.description.slice(0, 50) + 
-                            '...<span style="font-weight: 100; font-size: 0.875rem; line-height: 1.25rem">Read More</span>'
-                            }, 400
-                            )
-                        }}
-                         key={index} id="description">{value.description.slice(0, 50)}... 
-                        <span className="font-thin text-sm">Read More</span>
-                        </p>
-                    </div>
-                    
-                    )
-                })}
-                </div>
+            
+               
             <div className="border-b-2 py-10">
                 <form onSubmit={changeName} className="flex flex-col gap-2">
                     <label>You don't have a username!</label>
@@ -150,43 +110,8 @@ const Settings : NextPage =  (props : any) => {
             <div className="border-b-2 py-10">
                 <p>Welcome {serializedUserInfo.name}</p>
             </div>
-            <h1 className="text-lg text-center my-5">Books You Published on our platform</h1>
-                <div className="flex flex-wrap border-b-2 py-5 gap-3">
-                {serializedUserInfo.books.map((value : any , index : number) => {
-                    return (
-                        
-                    <div 
-                    onClick={(e : any) => {e.target}}
-                     className="h-fit  relative hover:cursor-pointer hover:scale-105 transition
-                      items-center flex flex-col w-64 rounded-md border border-black" key={index}> 
-                        <p>{value.name}</p>
-                        <Image src={value.image} width="240px" height="400px"/>
-                        <p>{value.price}$</p>
-                        <p
-                        className=""
-                         onMouseEnter={(e : any) => {
-                            console.log(e.target)
-                            e.target.className = " animate-growY "
-                            e.target.innerText = value.description
-                            
-                          
-                        }}
-                        onMouseLeave={(e : any) => {
-                            setTimeout(() => {
-                            e.target.className = "scroll-smooth"
-                            e.target.innerHTML = value.description.slice(0, 50) + 
-                            '...<span style="font-weight: 100; font-size: 0.875rem; line-height: 1.25rem">Read More</span>'
-                            }, 400
-                            )
-                        }}
-                         key={index} id="description">{value.description.slice(0, 50)}... 
-                        <span className="font-thin text-sm">Read More</span>
-                        </p>
-                    </div>
-                    
-                    )
-                })}
-                </div>
+            
+                
             <div className="border-b-2 py-10">
                 <form onSubmit={changeName} className="flex flex-col gap-2">
                     <label>Your Username:</label>
@@ -202,6 +127,87 @@ const Settings : NextPage =  (props : any) => {
                 <label>Your Email: </label>
                 <input className="border px-2 rounded-md w-fit" readOnly value={serializedUserInfo.email} />
             </div>
+            <h1 className="text-lg text-center my-5">Books You Published on our platform</h1>
+            <div className="flex flex-wrap border-b-2 py-5 gap-3">
+                {serializedUserInfo.books.length !== 0 &&
+                <>
+                {serializedUserInfo.books.map((value : any , index : number) => {
+                    return (
+                        <>
+                    {readStatus === index && 
+                    <>
+                    <div 
+                    onClick={(e : any) => {e.target}}
+                     className="h-fit z-10 shadow-2xl  shadow-slate-600 right-1/3 fixed top-5 w-1/2 left-1/3  bg-white transition
+                      items-center flex flex-col rounded-md border  border-black" key={index}> 
+                      <p onClick={() => setReadStatus()} className="top-0 right-0 self-end text-5xl font-thin hover:cursor-pointer px-5">x</p>
+                        <p>{value.name}</p>
+                        <div className="shadow-md shadow-slate-500 p-5 bg-white rounded-md">
+                        <Image src={value.image} width="240px" height="400px"/>
+                        </div>
+                        <p>{value.price}$</p>
+                        <>
+                        <p
+                        className="py-5 px-5"
+                         key={index} id="description">{value.description}
+                        <span onClick={() => {
+                           setReadStatus()
+                        }}
+                         className="font-thin cursor-pointer text-sm">Read Less</span>
+                        </p>
+                        </>
+                    </div>
+                    </>
+                    }{readStatus && 
+                        <div 
+
+                     className="h-fit blur-md relative hover:cursor-pointer hover:scale-105 transition
+                      items-center flex flex-col w-64 rounded-md border border-black" key={index}> 
+                        <p>{value.name}</p>
+                        <Image src={value.image} width="240px" height="400px"/>
+                        <p>{value.price}$</p>
+
+                    
+                        <p
+                        className=""
+                         key={index} id="description">{value.description.slice(0, 50)}... 
+                        <span id={index.toString()} onClick={() => {
+                            setReadStatus(index)
+                        }}
+                         className="font-thin cursor-pointer text-sm">Read More</span>
+                        </p>
+                        
+                        
+                    </div>
+                    }{!readStatus && 
+                    <div 
+                        onClick={() => setReadStatus(index)}
+                     className="h-fit relative hover:cursor-pointer hover:scale-105 transition
+                      items-center flex flex-col w-64 rounded-md border border-black" key={index}> 
+                        <p>{value.name}</p>
+                        <Image src={value.image} width="240px" height="400px"/>
+                        <p>{value.price}$</p>
+
+                    
+                        <p
+                        className=""
+                         key={index} id="description">{value.description.slice(0, 50)}... 
+                        <span id={index.toString()} onClick={() => {
+                            setReadStatus(index)
+                        }}
+                         className="font-thin cursor-pointer text-sm">Read More</span>
+                        </p>
+                        
+                        
+                    </div>
+                }
+                        </>
+                    )
+                })}
+                </>
+            }
+                </div>
+            
             <div id="cart" className="">
             <>
             {serializedUserInfo.cart.length !== 0 && 

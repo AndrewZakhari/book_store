@@ -7,9 +7,9 @@ module.exports = {
   theme: {
     extend: {
       keyframes: {
-          growY: {
-            '0% ': {height: '100px'},
-            '100%': {height: "fit-content"}
+          fadeIn : {
+            '0%': {opacity : '0'},
+            '100%' : {opacity : '1'}
           }
       } 
     },
