@@ -7,6 +7,7 @@ import Image from "next/image";
 import axios from "axios";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 
 export const getServerSideProps : GetServerSideProps = async (cxt) => {
@@ -80,11 +81,20 @@ const Settings : NextPage =  (props : any) => {
     
     return (
         <>
+        <style global jsx>
+   {`
+       html {
+          scroll-behavior: smooth;
+        }
+  `}
+  </style>
         <div className="flex gap-10 scroll-smooth h-screen">
-        <div id="sideMenu" className="top-0 left-0 w-60 bottom-0 flex flex-col items-center py-10 bg-black fixed text-white">
-            <p>SideMenu</p>
+        <div id="sideMenu" className="top-0 scroll-smooth left-0 w-60 bottom-0 gap-5 flex flex-col items-center py-10 bg-black fixed text-white">
+            <Link className="hover:cursor-pointer border border-b-2 border-white" href="#profile">Profile</Link>
+            
+            <Link href="#books">Your Books</Link>
         </div>
-        <div id="profile" className="my-10 ml-64 w-full">
+        <div id="profile" className="my-10 scroll-smooth ml-64 w-full">
            <div>
             {!serializedUserInfo.name  && 
             <>
@@ -132,13 +142,15 @@ const Settings : NextPage =  (props : any) => {
                 {serializedUserInfo.books.length !== 0 &&
                 <>
                 {serializedUserInfo.books.map((value : any , index : number) => {
+                    index++;
                     return (
                         <>
                     {readStatus === index && 
                     <>
                     <div 
+                    id="books"
                     onClick={(e : any) => {e.target}}
-                     className="h-fit z-10 shadow-2xl  shadow-slate-600 right-1/3 fixed top-5 w-1/2 left-1/3  bg-white transition
+                     className="h-fit z-10 shadow-2xl scroll-smooth  shadow-slate-600 right-1/3 fixed top-5 w-1/2 left-1/3  bg-white transition
                       items-center flex flex-col rounded-md border  border-black" key={index}> 
                       <p onClick={() => setReadStatus()} className="top-0 right-0 self-end text-5xl font-thin hover:cursor-pointer px-5">x</p>
                         <p>{value.name}</p>
@@ -160,8 +172,8 @@ const Settings : NextPage =  (props : any) => {
                     </>
                     }{readStatus && 
                         <div 
-
-                     className="h-fit blur-md relative hover:cursor-pointer hover:scale-105 transition
+                        id="books"
+                     className="h-fit blur-md relative hover:cursor-pointer scroll-smooth hover:scale-105 transition
                       items-center flex flex-col w-64 rounded-md border border-black" key={index}> 
                         <p>{value.name}</p>
                         <Image src={value.image} width="240px" height="400px"/>
@@ -181,8 +193,9 @@ const Settings : NextPage =  (props : any) => {
                     </div>
                     }{!readStatus && 
                     <div 
+                    id="books"
                         onClick={() => setReadStatus(index)}
-                     className="h-fit relative hover:cursor-pointer hover:scale-105 transition
+                     className="h-fit relative hover:cursor-pointer hover:scale-105 transition scroll-smooth
                       items-center flex flex-col w-64 rounded-md border border-black" key={index}> 
                         <p>{value.name}</p>
                         <Image src={value.image} width="240px" height="400px"/>
