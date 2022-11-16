@@ -81,13 +81,6 @@ const Settings : NextPage =  (props : any) => {
     
     return (
         <>
-        <style global jsx>
-   {`
-       html {
-          scroll-behavior: smooth;
-        }
-  `}
-  </style>
         <div className="flex gap-10 scroll-smooth h-screen">
         <div id="sideMenu" className="top-0 scroll-smooth left-0 w-60 bottom-0 gap-5 flex flex-col items-center py-10 bg-black fixed text-white">
             <Link className="hover:cursor-pointer border border-b-2 border-white" href="#profile">Profile</Link>
