@@ -1,9 +1,19 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
 
 
+/*type session = {
+    expires: String,
+    user : {
+        email : String,
+        name? : String,
+        image? : String
+    }
+}*/
+
 
 export default function Login() {
-    const {data: session, status} = useSession();
+    const {data: sessionData, status}  = useSession();
+    const session : any = sessionData;
     console.log(session) 
     if (status === "authenticated"){
         return (

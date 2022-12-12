@@ -1,10 +1,10 @@
 import { useSession } from "next-auth/react";
 import type { NextPage } from "next";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useState } from "react";
 import { GetStaticProps } from "next";
-const axios = require('axios');
+import axios from "axios";
 
 
 interface form  {
@@ -25,15 +25,40 @@ export const getStaticProps : GetStaticProps = () => {
 const Post : NextPage = (props) => {
 
     const {url} : any = props
+    const [genres , setGenres] = useState<String[]>([]);
+    const [update, setUpdate] = useState<boolean>(false)
+    const [error, setError] = useState<string>("")
+    const [Todo, setTodo] = useState<boolean>(true)
 
-    
+    async function addGenre(e: any) {
+        let tempArr : String[] = genres;
+        const genre : string = e.value;
+        console.log(genres.length);
+        if(genres.length === 0){
+            tempArr.push(genre);
+            setGenres(tempArr);
+            return
+        }else{
+        if(genres.includes(genre)){
+            console.log("genre already picked")
+            return
+        }else if (!genres.includes(genre)){
+            tempArr.push(genre);
+            setGenres(tempArr);
+            return
+        }
+        
+    }
+    setUpdate(true);
+    console.log(genres);
+    }
 
-    const [error, setError] = useState("")
-    const [Todo, setTodo] = useState(true)
+    async function removeGenre(value : string) {
+        setGenres(genres.filter((i) => i !== value))
+    }
 
    async function handlePost(e : form){
         e.preventDefault(); 
-    const arr = [e.target.image.files[0], e.target.price.value, e.target.description.value]
     const imageType = e.target.image.files[0].name.split('.')[1] 
     console.log(imageType === 'jpg')
     if(imageType !== 'jpg' && imageType !== "jpeg"){
@@ -70,6 +95,7 @@ const Post : NextPage = (props) => {
                     name : e.target.name.value,
                     image : res.secure_url, 
                     price : e.target.price.value,
+                    genres : genres,
                     description: e.target.description.value
                 }
             })
@@ -83,16 +109,48 @@ const Post : NextPage = (props) => {
     if(Todo){
     return (
         <>
-        <div className="flex items-center justify-center h-screen">
-            <form className="grid h-fit gap-3 place-items-center rounded-lg p-3
+        <div className="flex items-center  justify-center h-screen">
+            <form className="grid h-fit  gap-3 place-items-center rounded-lg p-3
               col-start-1 col-end-2 grid-cols-1 border-2 w-100 shadow-lg items-center text-center" onSubmit={handlePost}>
                 {error !== "" && 
                 <p className="text-white bg-red-600 rounded-md p-2 ">{error}</p>
                 }
                 <label>Book Name</label>
                 <input className="border rounded-md border-black focus:scale-105 transition" required type="text" name="name" />
-                <label className="">Upload Book's Image</label>
+                <label className="">Upload Book&apos;s Image</label>
                 <input required type="file" name="image" />
+                <label>Select the Book&apos;s Genre</label>
+                <select name="Genre">
+                    <option onClick={(e) => addGenre(e.target)} >Fantasy</option>
+                    <option onClick={(e) => addGenre(e.target)} >Fiction</option>
+                    <option onClick={(e) => addGenre(e.target)}>Action & Adventure</option>
+                    <option onClick={(e) => addGenre(e.target)}>Science</option>
+                    <option onClick={(e) => addGenre(e.target)}>Science Fiction</option>
+                    <option onClick={(e) => addGenre(e.target)}>Dystopian</option>
+                    <option onClick={(e) => addGenre(e.target)}>Mystery</option>
+                    <option onClick={(e) => addGenre(e.target)}>Horror</option>
+                    <option onClick={(e) => addGenre(e.target)}>Romance</option> 
+                </select>
+                <div className="grid gap-2 grid-cols-3">
+                    { genres.map((value : String, index : number) => {
+
+                        return (
+                            <>
+                            
+                            <div className="border w-28 px-3 hover:bg-slate-500
+                              rounded-md border-black shadow-md flex 
+                             h-full hover:cursor-default items-center justify-center" key={index}>
+                                
+                                <p className="flex gap-2">
+                                {value}
+                                <p onClick={(e : any) => {removeGenre(e.target.parentNode.firstChild.data)}} className="self-center h-max w-max 
+                                hover:cursor-pointer text-lg hover:text-slate-200">X</p>
+                                </p> 
+                            </div>
+                            </>
+                        )
+                    })}
+                </div>
                 <label>Price:</label>
                 <input required className="border focus:scale-105 transition rounded-md border-black" type="number" name="price"/>
                 <label>Description</label>

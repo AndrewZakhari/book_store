@@ -8,6 +8,14 @@ import Image from "next/image";
 import { useState } from "react";
 import axios from "axios";
 
+interface book {
+    name: String,
+    image: any,
+    price: String,
+    description: String,
+    genres: String[]
+}
+
 
 
 export const getStaticProps : GetStaticProps = async (cxt) => {
@@ -23,6 +31,8 @@ export const getStaticProps : GetStaticProps = async (cxt) => {
 const Browse : NextPage = (props : any) => {
     const [readState, setReadState] : any  = useState() 
     const [input, setInput] : any = useState("")
+
+    console.table(props)
 
     const handleSearch = async (e: any) => {
         e.preventDefault()
@@ -69,12 +79,12 @@ const Browse : NextPage = (props : any) => {
         </form>
        </div>
        <div className="blaze-slider mt-10 ">
-            <div className="blaze-container  overflow-visible">
+            <div className="blaze-container  ">
                 <div className="blaze-track-container h- overflow-visible">
                     <div className="blaze-track grid items-center py-5">
                         {props.serilaizedData.map((value : any, index : number) => {
                             return (    
-                            value.books.map(( value: any, index: number) => {
+                            value.books.map(( value: book, index: number) => {
                                 index++;
                                 
                                 return (
@@ -88,7 +98,7 @@ const Browse : NextPage = (props : any) => {
                                     }} id="booksWrapper" className="">
                                         <p>{value.name}</p>
                                         <p className="h-44 hidden z-10"></p>
-                                        <Image src={value.image} width="240px" height="400px"/>
+                                        <Image src={value.image} alt="" width="240px" height="400px"/>
                                         <p>{value.price} $</p>
                                         
                                     </div>
@@ -101,7 +111,7 @@ const Browse : NextPage = (props : any) => {
                                     }} id="booksWrapper" className="">
                                         <p>{value.name}</p>
                                         <p className="h-44 hidden z-10"></p>
-                                        <Image src={value.image} width="240px" height="400px"/>
+                                        <Image src={value.image} alt="" width="240px" height="400px"/>
                                         <p>{value.price} $</p>
                                         
                                     </div>
@@ -125,7 +135,7 @@ const Browse : NextPage = (props : any) => {
         {props.serilaizedData.map((value: any , index : number) => {
             return (
                 <>
-                {value.books.map((value: any , index: number) => {
+                {value.books.map((value: book , index: number) => {
                     index++
                     return (
                         <>
@@ -137,15 +147,23 @@ const Browse : NextPage = (props : any) => {
                                     >x</p>
                                     <p className="font-bold text-2xl">{value.name}</p>
                                     <div className="bg-white p-2 border rounded-md  ">
-                                    <Image src={value.image} width="240px" height= "400px" />
+                                    <Image src={value.image} alt="" width="240px" height= "400px" />
                                     </div>
                                     <p>{value.price}$</p>
+                                    <div className="flex gap-2">{value.genres.map((value: String, index: number) => {
+                                        return (
+                                           <p className=" border-gray-300 px-3 border" key={index}>{value}</p>
+                                        )
+                                    })}</div>
                                     <p>{value.description}</p>
                                 </div>
                                 
                             }
                             </>
-        )})}
+        )
+         }
+                                )
+                }
                             </>
              )
                         })
