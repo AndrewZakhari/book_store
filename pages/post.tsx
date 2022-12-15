@@ -25,10 +25,9 @@ export const getStaticProps : GetStaticProps = () => {
 const Post : NextPage = (props) => {
 
     const {url} : any = props
-    const [genres , setGenres] = useState<String[]>([]);
-    const [update, setUpdate] = useState<boolean>(false)
-    const [error, setError] = useState<string>("")
-    const [Todo, setTodo] = useState<boolean>(true)
+    const [genres , setGenres] = useState<String[]>([]); 
+    const [error, setError] = useState<string>("");
+    const [Todo, setTodo] = useState<boolean>(true);
 
     async function addGenre(e: any) {
         let tempArr : String[] = genres;
@@ -36,21 +35,23 @@ const Post : NextPage = (props) => {
         console.log(genres.length);
         if(genres.length === 0){
             tempArr.push(genre);
-            setGenres(tempArr);
+            setGenres([...tempArr]);
+            
             return
         }else{
         if(genres.includes(genre)){
-            console.log("genre already picked")
+            console.log("genre already picked");
             return
         }else if (!genres.includes(genre)){
+          
             tempArr.push(genre);
-            setGenres(tempArr);
+            setGenres([...tempArr]);
+            
             return
         }
         
     }
-    setUpdate(true);
-    console.log(genres);
+   
     }
 
     async function removeGenre(value : string) {
@@ -120,7 +121,7 @@ const Post : NextPage = (props) => {
                 <label className="">Upload Book&apos;s Image</label>
                 <input required type="file" name="image" />
                 <label>Select the Book&apos;s Genre</label>
-                <select name="Genre">
+                <select name="Genre"> 
                     <option onClick={(e) => addGenre(e.target)} >Fantasy</option>
                     <option onClick={(e) => addGenre(e.target)} >Fiction</option>
                     <option onClick={(e) => addGenre(e.target)}>Action & Adventure</option>
@@ -132,24 +133,28 @@ const Post : NextPage = (props) => {
                     <option onClick={(e) => addGenre(e.target)}>Romance</option> 
                 </select>
                 <div className="grid gap-2 grid-cols-3">
-                    { genres.map((value : String, index : number) => {
+                    
+                        
+                    {genres.map((value : String, index : number) => {
 
                         return (
                             <>
                             
-                            <div className="border w-28 px-3 hover:bg-slate-500
+                            <div key={index} id="genre" className="border w-28 px-3 hover:bg-slate-500
                               rounded-md border-black shadow-md flex 
-                             h-full hover:cursor-default items-center justify-center" key={index}>
+                             h-full hover:cursor-default items-center justify-center">
                                 
-                                <p className="flex gap-2">
+                                <p key={index} className="flex gap-2">
                                 {value}
-                                <p onClick={(e : any) => {removeGenre(e.target.parentNode.firstChild.data)}} className="self-center h-max w-max 
-                                hover:cursor-pointer text-lg hover:text-slate-200">X</p>
+                                <span key={index} onClick={(e : any) => {removeGenre(e.target.parentNode.firstChild.data)}} className="self-center h-max w-max 
+                                hover:cursor-pointer text-lg hover:text-slate-200">X</span>
                                 </p> 
                             </div>
                             </>
                         )
                     })}
+               
+               
                 </div>
                 <label>Price:</label>
                 <input required className="border focus:scale-105 transition rounded-md border-black" type="number" name="price"/>
