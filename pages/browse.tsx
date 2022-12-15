@@ -32,8 +32,8 @@ export const getStaticProps : GetStaticProps = async (cxt) => {
 
 const Browse : NextPage = (props : any) => {
     const [readState, setReadState]  = useState<number | null>();
-    const [searchFound, setSearchFound] = useState<book>();
-    const [searchNotFound, setSearchNotFound] = useState<string>();
+    const [searchFound, setSearchFound] = useState<book | null>();
+    const [searchNotFound, setSearchNotFound] = useState<string | null>();
 
     const handleSearch = async (e: any) => {
         e.preventDefault()
@@ -91,8 +91,8 @@ const Browse : NextPage = (props : any) => {
             </>
             }{searchNotFound && 
                 <>
-                <div className="bg-white  flex justify-center">
-                    <p>Couldn&apos;t find what you&apos;r looking for</p>
+                <div className="bg-red-500  flex justify-center">
+                    <p>Couldn&apos;t find what you&apos;r looking for <span>x</span></p>
                 </div>
                 </>
             }
