@@ -34,6 +34,7 @@ const Browse : NextPage = (props : any) => {
     const [readState, setReadState]  = useState<number | null>();
     const [searchFound, setSearchFound] = useState<book | null>();
     const [searchNotFound, setSearchNotFound] = useState<string | null>();
+    const [random, setRandom] = useState<Number[] | null>([Math.floor(Math.random() * 5), Math.floor(Math.random() * 5), Math.floor(Math.random() * 5)]);
 
     const handleSearch = async (e: any) => {
         e.preventDefault()
@@ -45,8 +46,11 @@ const Browse : NextPage = (props : any) => {
         const res : {found : any} = await api.json();
         if(res.found === "Not Found"){
             setSearchNotFound(res.found);
-        }
+            setSearchFound(null);
+        }else {
+        setSearchNotFound(null);
         setSearchFound(res.found);
+        }
         console.log(res.found);
     }
 
@@ -91,8 +95,14 @@ const Browse : NextPage = (props : any) => {
             </>
             }{searchNotFound && 
                 <>
-                <div className="bg-red-500  flex justify-center">
-                    <p>Couldn&apos;t find what you&apos;r looking for <span>x</span></p>
+                <div className="grid place-items-center">
+                <div className="bg-red-500/75 w-fit px-4  items-center rounded-md flex justify-center">
+                    <p className="align-middle flex items-center justify-center gap-5">Couldn&apos;t find what you&apos;r looking for 
+                        <span onClick={() => {
+                            setSearchNotFound(null);
+                        }} className="text-3xl pb-2 hover:cursor-pointer hover:text-red-200/100">x</span>
+                        </p>
+                </div>
                 </div>
                 </>
             }
@@ -194,51 +204,32 @@ const Browse : NextPage = (props : any) => {
                             return (    
                             value.books.map(( value: book, index: number) => {
                                 index++;
-                                
-                                 if (index === index * Math.floor(Math.random() * 2)){
-                                return ( 
-                                    <>
-                                    
-                                    {!readState &&
-                                    <>
-                                    
-                                      
-                                    <div className="border border-slate-500 h-max rounded-md flex items-center 
-                                    text-center w-64 flex-col hover:cursor-pointer hover:scale-105 transition">
-                                    <div key={index} onClick={() => {
+                                return (
+                                random?.map((randomIndex : Number) => {
+                                    return(
+                                        <>
+                                        {randomIndex === index && 
+                                        <>
+                                        {!readState &&
+                                            <div className="border px-3 border-slate-500 h-max rounded-md flex items-center 
+                                              text-center flex-col hover:cursor-pointer hover:scale-105 transition">
+                                            <div key={index} onClick={() => {
                                         
-                                        setReadState(index)
-                                    }} id="booksWrapper" >
-                                        <p>{value.name}</p>
-                                        <p className="h-44 hidden z-10"></p>
-                                        <Image src={value.image} alt="" width="240px" height="400px"/>
-                                        <p>{value.price} $</p>
+                                              setReadState(index)
+                                            }} id="booksWrapper" className="">
+                                            <p>{value.name}</p>
+                                            <Image src={value.image} alt="" width="240px" height="400px"/>
+                                            <p>{value.price} $</p>
                                         
-                                    </div>
-                                    </div>
-                                    
-                                    </>
-                            }   
-                             {readState &&
-                                    <>      
-                                    <div className="border border-slate-500 h-max rounded-md flex items-center 
-                                    text-center w-64 blur-lg flex-col hover:cursor-pointer hover:scale-105 transition">
-                                    <div key={index} onClick={() => {
-                                        
-                                        setReadState(index)
-                                    }} id="booksWrapper" className="">
-                                        <p>{value.name}</p>
-                                        <p className="h-44 hidden z-10"></p>
-                                        <Image src={value.image} alt="" width="240px" height="400px"/>
-                                        <p>{value.price} $</p>
-                                        
-                                    </div>
-                                    </div>
-                                    </>
-                            }  
-                           
-                                    </>
-                                )}
+                                            </div>
+                                            </div>
+                                        }
+                                        </>
+                                        }
+                                        </>
+                                    )
+                                })
+                                ) 
                             })      
                             )
                             
